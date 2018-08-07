@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 TIMEOUT = os.environ.get('TIMEOUT',180)
 
-bin = "/usr/local/bin/pdf2htmlEX"
+OFFICE_BIN = "/opt/libreoffice6.0/program/soffice"
 ALLOWED_EXTENSIONS = set(['pdf',])
 
 
@@ -72,7 +72,7 @@ def pdf2pdf(pdf_path):
     return fp
 
 def convert_odg(out_dir, pdf_path):
-    cmd = ['libreoffice6.0','--convert-to','odg','--outdir',out_dir, pdf_path]
+    cmd = [OFFICE_BIN,'--convert-to','odg','--outdir',out_dir, pdf_path]
     # subprocess.check_output(cmd,timeout=1)
     popen = subprocess.Popen(cmd,)
     try:
@@ -100,7 +100,7 @@ def modif_zip(out_dir, odg_path):
                 myzip.write(file_path,arcname=file_path.replace(folder_path,'').lstrip('/'))
 
 def convert_pdf(out_dir, odg_path):
-    cmd = ['libreoffice6.0','--convert-to','pdf','--outdir',out_dir, odg_path]
+    cmd = [OFFICE_BIN,'--convert-to','pdf','--outdir',out_dir, odg_path]
     popen = subprocess.Popen(cmd,)
     try:
         popen.wait(TIMEOUT)
