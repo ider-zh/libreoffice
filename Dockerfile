@@ -1,11 +1,14 @@
 FROM ubuntu:18.04
 
+MAINTAINER ider <ider@knogen.cn>
+
 RUN sed -e 's/security.ubuntu/mirrors.aliyun/g' \
     -e 's/archive.ubuntu/mirrors.aliyun/g' \
     -i /etc/apt/sources.list && \
     apt update && \
     apt install -y \
     git \
+    curl \
     libx11-6 \
     libxinerama-dev  \
     ghostscript             \
