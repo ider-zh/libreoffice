@@ -50,12 +50,21 @@ def upload_file():
                 app.config['executor_file'].submit(shutil.rmtree, pdf_floder_path)
                 return str(e),500
 
+            remove_old_fold(app.config['UPLOAD_FOLDER'])
             app.config['COUNT'] += 1
             return send_file(fp,as_attachment=True,attachment_filename=filename)
     elif request.method == 'GET':
         return 'Completing %s document conversions'%app.config['COUNT']
     return "unknow error", 500
 
+def remove_old_fold(root_path):
+    for fold in os.listdir(root_path):
+        fold_path = os.path.join(root_path,fold)
+        if os.path.isdir(fold_path):
+            date = datetime.datetime.fromtimestamp(os.path.getmtime(fold_path))
+            now = datetime.datetime.now()
+            if (now - date).seconds > 6 * 60 *60:
+                app.config['executor_file'].submit(shutil.rmtree, fold_path)
 
 def pdf2pdf(pdf_path):
     out_folder_uuid =  str(uuid.uuid4())
